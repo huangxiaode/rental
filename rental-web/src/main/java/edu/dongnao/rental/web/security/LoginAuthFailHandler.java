@@ -25,7 +25,7 @@ public class LoginAuthFailHandler extends SimpleUrlAuthenticationFailureHandler 
                                         AuthenticationException exception) throws IOException, ServletException {
         String targetUrl =
                 this.urlEntryPoint.determineUrlToUseForThisRequest(request, response, exception);
-
+        // 将登录失败的错误信息带上，告知用户失败的原因
         targetUrl += "?" + exception.getMessage();
         super.setDefaultFailureUrl(targetUrl);
         super.onAuthenticationFailure(request, response, exception);

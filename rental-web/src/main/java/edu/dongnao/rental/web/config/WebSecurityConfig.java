@@ -31,11 +31,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    	// 权限验证过滤器
+    	// 身份验证过滤器
         http.addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 资源访问权限
-        http.authorizeRequests()
+        http.authorizeRequests()		// 通过URL拦截表达式注册器，注册需要管理的资源权限
                 .antMatchers("/admin/login").permitAll() // 管理员登录入口
                 .antMatchers("/static/**").permitAll() // 静态资源
                 .antMatchers("/user/login").permitAll() // 用户登录入口
@@ -43,22 +43,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/api/user/**").hasAnyRole("ADMIN", "USER")
                 .and()
-                .formLogin()
+                .formLogin()		// 进行登录配置
                 .loginProcessingUrl("/login") // 配置角色登录处理入口
-                .failureHandler(authFailHandler())
+                .failureHandler(authFailHandler())		// 等失败处理
                 .successHandler(successHandler())
                 .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/logout/page")
+                .logout()			// 登出操作
+                .logoutUrl("/logout")		// 登出路径
+                .logoutSuccessUrl("/logout/page")		// 登出后回到的页面，也可以是登录页面
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
                 .and()
-                .exceptionHandling()
+                .exceptionHandling()		// 异常
                 .authenticationEntryPoint(urlEntryPoint())
                 .accessDeniedPage("/403");
-
+        // CSRF（Cross-site request forgery）指跨站请求伪造，security4.0默认启用
+        // 在请求接口的时候需要加入csrfToken才能正常访问，为了开发方便，禁用它。
         http.csrf().disable();
+        // 前端h-ui界面使用iframe开发，设置使用同源策略
         http.headers().frameOptions().sameOrigin();
     }
 

@@ -20,7 +20,7 @@ $(function () {
         }
 
         changeRegion($region, selectedVal);
-        changeSubwayLine($subwayLine, selectedVal);
+         ($subwayLine, selectedVal);
     });
 
     // 地铁站三级联动

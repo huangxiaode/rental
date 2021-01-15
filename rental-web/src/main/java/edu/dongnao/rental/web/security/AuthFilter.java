@@ -21,8 +21,7 @@ import edu.dongnao.rental.uc.domian.UserInfo;
 import edu.dongnao.rental.web.base.LoginUserUtil;
 
 /**
- * 通过用户名和密码进行身份验证
- * 
+ * 身份验证过滤器
  *
  */
 public class AuthFilter extends UsernamePasswordAuthenticationFilter {
@@ -35,30 +34,33 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
+		// 验证用户名信息
 		String name = obtainUsername(request);
 		if(! Strings.isNullOrEmpty(name)) {
 			request.setAttribute("username", name);
 			return super.attemptAuthentication(request, response);
 		}
 		
+		// 通过电话号码免注册登录
 		String telephone = request.getParameter("telephone");
 		 if (Strings.isNullOrEmpty(telephone) || !LoginUserUtil.checkTelephone(telephone)) {
 	            throw new BadCredentialsException("Wrong telephone number");
 	     }
-		 
+		// 短信验证码方式进行登录注册
 		ServiceResult<UserInfo> userResult = userService.findUserByTelephone(telephone);
         UserInfo user = userResult.getResult();
         String inputCode = request.getParameter("smsCode");
         String sessionCode = smsService.getSmsCode(telephone);
         if (Objects.equals(inputCode, sessionCode)) {
         	if(user == null) {
+        		// 注册用户信息
         		ServiceResult<UserInfo> newUserResult = userService.addUserByTelephone(telephone);
         		user = newUserResult.getResult();
         	}
         	return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        } else {
+            throw new BadCredentialsException("smsCodeError");
         }
-		 
-		throw new BadCredentialsException("验证发生错误");
 	}
 
 }

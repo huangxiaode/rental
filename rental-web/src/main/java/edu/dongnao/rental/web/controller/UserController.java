@@ -14,7 +14,7 @@ import edu.dongnao.rental.uc.api.ISmsService;
 import edu.dongnao.rental.uc.api.IUserService;
 import edu.dongnao.rental.web.base.LoginUserUtil;
 /**
- * 
+ * 用户访问控制层
  */
 @Controller
 public class UserController {

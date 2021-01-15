@@ -4,6 +4,8 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.dubbo.config.annotation.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +30,8 @@ import edu.dongnao.rental.uc.api.ISmsService;
  */
 @Service(protocol = "dubbo")
 public class SmsServiceImpl implements ISmsService, InitializingBean {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Value("${aliyun.sms.accessKey}")
     private String accessKey;
 
@@ -50,7 +54,7 @@ public class SmsServiceImpl implements ISmsService, InitializingBean {
 
 	@Override
 	public ServiceResult<String> sendSms(String telephone) {
-		String gapKey = SMS_CODE_CONTENT_PREFIX+telephone;
+		String gapKey = "SMS::CODE::INTERVAL::"+telephone;
 		// 判断是否已经发送过了
 		String result = redisTemplate.opsForValue().get(gapKey);
 		if(result != null) {
@@ -69,7 +73,7 @@ public class SmsServiceImpl implements ISmsService, InitializingBean {
 		SendSmsRequest request = new SendSmsRequest();
 
         // 使用post提交
-        request.setMethod(MethodType.POST);
+        request.setSysMethod(MethodType.POST);
         request.setPhoneNumbers(telephone);
         request.setTemplateParam(templateParam);
         request.setTemplateCode(templateCode);
@@ -80,13 +84,16 @@ public class SmsServiceImpl implements ISmsService, InitializingBean {
             if ("OK".equals(response.getCode())) {
                 success = true;
             } else {
-                // TODO log this question
+            	logger.error("send sms fail: %s", response.getMessage());
             }
         } catch (ClientException e) {
             e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         if (success) {
+        	// 请求间隔，1分钟
             redisTemplate.opsForValue().set(gapKey, code, 60, TimeUnit.SECONDS);
+            // 缓存 10分钟
             redisTemplate.opsForValue().set(SMS_CODE_CONTENT_PREFIX + telephone, code, 10, TimeUnit.MINUTES);
             return ServiceResult.of(code);
         } else {
@@ -103,19 +110,21 @@ public class SmsServiceImpl implements ISmsService, InitializingBean {
 	public void remove(String telephone) {
 		this.redisTemplate.delete(SMS_CODE_CONTENT_PREFIX + telephone);
 	}
-
+	
+	/**
+	 * 通过spring bean初始化接口，初始化acsClient。
+	 * 具体代码可参考阿里云短信服务帮助手册。
+	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 设置超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-
+        
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKey, secertKey);
-
         String product = "Dysmsapi";
-        String domain = "dysmsapi.aliyuncs.com";
-
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
+        DefaultProfile.addEndpoint("cn-hangzhou", product, "cn-hangzhou");
+        
         this.acsClient = new DefaultAcsClient(profile);
 		
 	}

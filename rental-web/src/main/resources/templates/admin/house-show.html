@@ -1,239 +1,289 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <div th:include="admin/common :: head"></div>
-    <link rel="stylesheet" type="text/css" href="/static/lib/webuploader/0.1.5/webuploader.css">
-    <title>增加房源</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-language" content="zh-CN"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="applicable-device" content="pc">
+
+    <title>租房</title>
+    <meta name="description" content="方便快捷租房"/>
+    <meta name="keywords" content="租房"/>
+    <link href="/static/css/main.css" rel='stylesheet' type='text/css'/>
+    <link href="/static/css/list.css" rel='stylesheet' type='text/css'/>
+    <link href="/static/lib/layui/layui.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/static/css/detail.css" type="text/css"/>
 </head>
 <body>
-<div>
-    <content class="page-container">
-        <form class="form form-horizontal" id="form-house-add">
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>大标题：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="标题信息" id="title" name="title">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>省：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span class="select-box" style="widows: 0;">
-                        <select class="select" name="province" id="province">
-                            <option value="">请选择</option>
-                        </select>
-                    </span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>市：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span class="select-box" style="widows: 0;">
-                        <select class="select" name="city" id="city">
-                            <option value="">请选择</option>
-                        </select>
-                    </span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>区/县：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <span class="select-box" style="widows: 0;">
-                        <select class="select" name="region" id="region">
-                            <option value="">请选择</option>
-                        </select>
-                    </span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>地址：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="详细地址" id="detailAddress"
-                           name="detailAddress">
-                </div>
-            </div>
-            <div class="row cl">
 
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>房屋格局：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <span class="select-box" style="widows: 0;">
-				        <select name="layout" class="select">
-					        <option value="1">一居室</option>
-                            <option value="2">两居室</option>
-                            <option value="3">三居室</option>
-                            <option value="4">四居室</option>
-                            <option value="5">其他</option>
-                        </select>
-				    </span>
-                </div>
-
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>所在楼层：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <input type="text" class="input-text" value="0" placeholder="所在楼层" id="floor" name="floor">
-                </div>
-
+<div class="content-wrapper">
+    <div class="title-wrapper">
+        <div class="content">
+            <div class="title">
+                <h1 class="main" th:text="${house.title}"></h1>
+                <div class="sub" th:text="${house.houseDetail.description}">这个经纪人很懒，没写核心卖点</div>
             </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>总楼层：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <input type="text" class="input-text" value="0" placeholder="所在楼层" id="totalFloor"
-                           name="totalFloor">
-                </div>
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>建筑时间：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <input type="text"
-                           onfocus="WdatePicker({ dateFmt:'yyyy',maxDate:'#F{$dp.$D(\'buildYear\')||\'%y\'}' })"
-                           id="buildYear" name="buildYear" class="input-text Wdate">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>面积：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <input type="text" class="input-text" value="0" placeholder="" id="area" name="area">
-                </div>
-                <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>定价：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <input type="text" class="input-text" value="0" placeholder="" id="price" name="price">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">租赁方式：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <span class="select-box" style="widows: 0;">
-				        <select name="rentWay" class="select">
-                            <option value="0">整租</option>
-                            <option value="1">合租</option>
-                        </select>
-				    </span>
-                </div>
-                <label class="form-label col-xs-4 col-sm-2">地铁线路：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <span class="select-box" style="widows: 0;">
-				        <select name="nearSubwayLine" class="select">
-                            <option value="">请选择</option>
-                            <option value="0">1</option>
-                            <option value="1">2</option>
-                            <option value="13">13</option>
-                        </select>
-				    </span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">地铁站：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <span class="select-box" style="widows: 0;">
-				        <select name="nearSubwayStation" class="select">
-                            <option value="">请选择</option>
-                            <option value="0">望京</option>
-                            <option value="1">望京西</option>
-                            <option value="2">望京南</option>
-                        </select>
-				    </span>
-                </div>
-                <label class="form-label col-xs-4 col-sm-2">距地铁距离：</label>
-                <div class="formControls col-xs-8 col-sm-2">
-                    <input type="text" class="input-text" value="0" placeholder="" id="distanceToSubway"
-                           name="distanceToSubway">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">关键词：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="可以输入多个关键词，以斜杠'/'做分隔符"
-                           id="keywords" name="keywords">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">户型介绍：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="房屋整体户型的相关介绍"
-                           id="layoutDesc" name="layoutDesc">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">交通出行：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="周边的交通设施"
-                           id="traffic" name="traffic">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">周边配套：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="周边的服务配套设施，如学校、医院等"
-                           id="roundService" name="roundService">
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">房屋描述：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="description" cols="" rows="" class="textarea" placeholder="说点什么...最少输入10个字符"
-                          datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！"
-                          onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                </div>
-            </div>
-
-            <div class="uploader-list-container" style=" width: 60%; height: 30%; position: relative;
-                margin-left:17%;">
-                <div class="queueList">
-                    <div id="dndArea" class="placeholder">
-                        <div id="filePicker-2"></div>
-                        <p>或将照片拖到这里，单次最多可选5张</p>
-                    </div>
-                </div>
-                <div class="statusBar" style="display:none;">
-                    <div class="progress"><span class="text">0%</span> <span class="percentage"></span></div>
-                    <div class="info"></div>
-                    <div class="btns">
-                        <div id="filePicker2"></div>
-                        <div class="uploadBtn">开始上传</div>
+        </div>
+    </div>
+    <div class="overview">
+        <div class="img" id="topImg">
+            <div class="imgContainer layui-carousel" id="overview-photos">
+                <div carousel-item>
+                    <div th:each="picture : ${house.pictures}">
+                        <img th:src="${picture.cdnPrefix + picture.path}"/>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="content zf-content">
+            <div class="price ">
+                <span class="total" th:text="${house.price}">-</span>
+                <span class="unit">
+        <span>元/月</span>
+      </span>
 
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">封面：</label>
-                <div id="upload-cover-container" class="formControls col-xs-8 col-sm-9">
-                    <!-- 封面列表 -->
-                    <span>请先上传图片，从中选择封面</span>
+
+                <span class="tips decoration">精装修</span>
+                <div class="removeIcon"></div>
+            </div>
+            <div class="zf-room">
+                <p class="lf"><i>面积：</i><span th:text="${house.area}"></span>平米</p>
+                <p class="lf"><i>房屋户型：</i>
+                    <span th:text="${house.room}"></span>室<span th:text="${house.parlour}"></span>厅<span
+                            th:text="${house.bathroom}"></span>卫
+                    <span
+                            th:text="${house.houseDetail.rentWay == 0} ? '整租' : '合租'">租住方式</span></p>
+                <p class="lf"><i>楼层：</i><span th:text="${house.floor}"></span>层 (共<span
+                        th:text="${house.totalFloor}">0</span>层)</p>
+                <p class="lf"><i>房屋朝向：</i>
+                    <span th:switch="${house.direction}">
+                        <span th:case="1">朝东</span>
+                        <span th:case="2">朝南</span>
+                        <span th:case="3">朝西</span>
+                        <span th:case="4">朝北</span>
+                        <span th:case="5">南 北</span>
+                        <span th:case="*">其他</span>
+                    </span>
+                </p>
+                <div class="clear"></div>
+                <p><i>地铁：</i>
+                    <span th:if="${house.distanceToSubway > -1}">
+                        距地铁<span th:text="${house.houseDetail.subwayLineName}">线</span>
+                        <span th:text="${house.houseDetail.subwayStationName}">站点</span>
+                        站<span th:text="${house.distanceToSubway}">0</span>米
+                    </span>
+                    <span th:if="${house.distanceToSubway < 0}">暂无数据</span>
+                </p>
+                <p><i>小区：</i>
+                    <a href="/xiaoqu/1111027382235/" th:text="${house.district}">小区</a>
+                    - <a href="/zufang/c1111027382235/"><span th:text="${houseCountInDistrict}"></span>套出租中</a>
+                </p>
+                <p><i>位置：</i>
+                    <a href="/zufang/chaoyang/" th:text="${region.cnName}">地区</a>
+                </p>
+                <p class="lf"><i>发布时间：</i>
+                    <span th:text="${#dates.format(house.lastUpdateTime, 'yyyy-MM-dd')}">时间</span>
+                </p>
+                <div class="clear"></div>
+            </div>
+            <div class="brokerInfo" log-mod="zufang_detail_diamond-first">
+                <a href="#">
+                    <img class="LOGCLICK" data-log_id="20001" data-bl="agent" data-el="1000000020276906"
+                         th:src="${agent.avatar}" alt="经纪人">
+                </a>
+                <div class="brokerInfoText">
+                    <div class="brokerName">
+                        <a href="#" class="name LOGCLICK" data-log_id="20001"
+                           data-bl="agent" data-el="1000000020276906" th:text="${agent.name}">经纪人</a>
+                        <span class="tag ">高级经纪人</span>
+                        <a class="LOGCLICK" data-log_id="20001" data-bl="agentim"
+                           data-el="1000000020276906" style="display: none;" title="在线咨询"
+                           data-ucid="1000000020276906">
+                        </a>
+                    </div>
+                    <div class="evaluate">
+                        <span class="time">本房带看：<span th:text="${house.watchTimes}">0</span>次</span>
+                    </div>
+                    <div class="phone" th:text="${agent.phoneNumber}">
+                    </div>
                 </div>
-                <!--<input id="cover" type="hidden" value=""/>-->
             </div>
-
-            <div class="upload-photo-ids-container">
-                <!--这里放上传OK图片的信息 在表单中一起上传-->
-            </div>
-
-            <div class="row cl">
-                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-                    <button class="btn btn-primary radius" type="submit"><i
-                            class="Hui-iconfont">&#xe632;</i> 提交审核
-                    </button>
-                    <!--<button onClick="layer_close();" class="btn btn-default radius"-->
-                    <button onClick="removeIframe();" class="btn btn-default radius"
-                            type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;
-                    </button>
+            <div class="houseRecord">
+                <span class="houseNum">租房编号：<span th:text="${house.id}"></span></span>
+                <div class="right">
+                    <span class="detail">真实房源，假一赔亿！</span>
                 </div>
             </div>
-        </form>
-    </content>
+        </div>
+    </div>
 </div>
 
-<footer th:include="admin/common :: footer"></footer>
+<div class="detailPageTab">
+    <ul style="position: relative; top: 0px; z-index: 1000; width: 1000px;">
+        <li>
+            <a class="force" href="#introduction">房源介绍</a>
+        </li>
+        <li>
+            <a href="#around" class="">周边配套</a>
+        </li>
+    </ul>
+</div>
 
-<!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="/static/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-<script type="text/javascript" src="/static/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-<script type="text/javascript" src="/static/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-<script type="text/javascript" src="/static/lib/jquery.validation/1.14.0/messages_zh.js"></script>
-<script type="text/javascript" src="/static/lib/webuploader/0.1.5/webuploader.min.js"></script>
-<script type="text/javascript" src="/static/js/admin/upload.js"></script>
-<script type="text/javascript">
+<div class="content-wrapper introduction-wrapper" id="introduction">
+    <div class="introduction">
+        <div class="title">房源介绍</div>
+        <div class="introContent">
+            <div class="base">
+                <div class="name">基本属性</div>
+                <div class="content">
+                    <ul>
+                        <li><span class="label">租赁方式：</span>
+                            <span th:text="${house.houseDetail.rentWay == 0 ? '整租' : '合租'}"></span>
+                        </li>
+                        <li>
+                            <span class="label">付款方式：</span>
+                            季付
+                        </li>
+                        <li>
+                            <span class="label">房屋现状：</span>
+                            <span th:switch="${house.status}">
+                                <span th:case="0">暂未上架</span>
+                                <span th:case="1">目前出租</span>
+                                <span th:case="2">已出租</span>
+                                <span th:case="3">已下架</span>
+                            </span>
+                        </li>
+                        <li><span class="label">房屋朝向：</span>
+                            <span th:switch="${house.direction}">
+                                <span th:case="1">朝东</span>
+                                <span th:case="2">朝南</span>
+                                <span th:case="3">朝西</span>
+                                <span th:case="4">朝北</span>
+                                <span th:case="5">南 北</span>
+                                <span th:case="*">其他</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="name">房源特色</div>
+                <div class="zf-tag">
+                    <ul class="se">
+                        <li class="tag1 tags">
+                            <span></span>
+                            床
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag11 tags">
+                            <span></span>
+                            衣柜
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag12 tags">
+                            <span></span>
+                            桌椅
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag2 tags">
+                            <span></span>
+                            电视
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag3 tags">
+                            <span></span>
+                            冰箱
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag4 tags">
+                            <span></span>
+                            洗衣机
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag5 tags">
+                            <span></span>
+                            空调
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag10 tags">
+                            <span></span>
+                            热水器
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag13 tags">
+                            <span></span>
+                            微波炉
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag6 tags">
+                            <span></span>
+                            暖气
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag7 tags">
+                            <span></span>
+                            宽带
+                            <p>
+                            </p>
+                        </li>
+                        <li class="tag9 tags">
+                            <span></span>
+                            天然气
+                            <p>
+                            </p>
+                        </li>
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+                <div class="featureContent">
+                    <ul>
+                        <li>
+                            <span class="label">户型介绍：</span>
+                            <span class="text" th:text="${house.houseDetail.layoutDesc}">暂无描述</span>
+                        </li>
+                        <li>
+                            <span class="label">交通出行：</span>
+                            <span class="text" th:text="${house.houseDetail.traffic}">暂无描述</span>
+                        </li>
+                        <li>
+                            <span class="label">周边配套：</span>
+                            <span class="text" th:text="${house.houseDetail.roundService}">暂无描述</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="more">展开更多信息</div>
+    </div>
+</div>
 
+<div id="only" data-city="bj" data-page="zufang_view"></div>
+<script src="/static/lib/layui/layui.js" type="text/javascript"></script>
+<script th:inline="javascript" type="text/javascript">
+<!-- layui的图片轮播 -->
+layui.use('carousel', function () {
+    var carousel = layui.carousel;
+    //建造实例
+    carousel.render({
+        elem: '#overview-photos',
+        width: '100%', //设置容器宽度
+        arrow: 'always', //始终显示箭头
+        //,anim: 'updown' //切换动画方式
+        height: '400px',
+        autoplay: false // 关闭自动切换
+    });
+});
 </script>
-<!--/请在上方写此页面业务相关的脚本-->
 </body>
 </html>

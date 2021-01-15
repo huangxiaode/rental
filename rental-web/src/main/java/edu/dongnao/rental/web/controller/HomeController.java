@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 /**
- * 
+ * 首页访问控制层
  */
 @Controller
 public class HomeController {
